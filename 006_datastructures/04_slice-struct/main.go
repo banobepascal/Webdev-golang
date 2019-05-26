@@ -1,9 +1,9 @@
 package main
 
 import (
-	"html/template"
 	"log"
 	"os"
+	"text/template"
 )
 
 var tpl *template.Template
@@ -14,7 +14,7 @@ type sage struct {
 }
 
 func init() {
-	tpl = template.Must(template.ParseFiles("index.html"))
+	tpl = template.Must(template.ParseFiles("index.gohtml"))
 }
 
 func main() {
@@ -41,7 +41,7 @@ func main() {
 
 	sages := []sage{Pascal, Bonny, Brooke, Francis}
 
-	err := tpl.ExecuteTemplate(os.Stdout, "index.html", sages)
+	err := tpl.ExecuteTemplate(os.Stdout, "index.gohtml", sages)
 	if err != nil {
 		log.Fatalln(err)
 	}
