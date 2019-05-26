@@ -1,15 +1,15 @@
 package main
 
 import (
-	"html/template"
 	"log"
 	"os"
+	"text/template"
 )
 
 var tpl *template.Template
 
 func init() {
-	tpl = template.Must(template.ParseFiles("index.html"))
+	tpl = template.Must(template.ParseFiles("index.gohtml"))
 }
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 		"Francis": "Javascript",
 	}
 
-	err := tpl.ExecuteTemplate(os.Stdout, "index.html", sage)
+	err := tpl.ExecuteTemplate(os.Stdout, "index.gohtml", sage)
 	if err != nil {
 		log.Fatalln(err)
 	}
