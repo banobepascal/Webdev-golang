@@ -1,9 +1,9 @@
 package main
 
 import (
-	"html/template"
 	"log"
 	"os"
+	"text/template"
 )
 
 var tpl *template.Template
@@ -14,7 +14,7 @@ type sage struct {
 }
 
 func init() {
-	tpl = template.Must(template.ParseFiles("index.html"))
+	tpl = template.Must(template.ParseFiles("index.gohtml"))
 }
 
 func main() {
@@ -24,7 +24,7 @@ func main() {
 		Position: "Golang Developer",
 	}
 
-	err := tpl.ExecuteTemplate(os.Stdout, "index.html", Pascal)
+	err := tpl.ExecuteTemplate(os.Stdout, "index.gohtml", Pascal)
 	if err != nil {
 		log.Fatalln(err)
 	}
