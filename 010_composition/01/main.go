@@ -14,7 +14,7 @@ type person struct {
 var tpl *template.Template
 
 func init() {
-	tpl = template.Must(template.ParseFiles("index.html"))
+	tpl = template.Must(template.ParseFiles("index.gohtml"))
 }
 
 func main() {
@@ -24,7 +24,7 @@ func main() {
 		Age:  21,
 	}
 
-	err := tpl.ExecuteTemplate(os.Stdout, "index.html", p1)
+	err := tpl.ExecuteTemplate(os.Stdout, "index.gohtml", p1)
 	if err != nil {
 		log.Fatalln(err)
 	}
