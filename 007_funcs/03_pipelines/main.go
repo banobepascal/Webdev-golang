@@ -1,10 +1,10 @@
 package main
 
 import (
-	"html/template"
 	"log"
 	"math"
 	"os"
+	"text/template"
 )
 
 var tpl *template.Template
@@ -16,7 +16,7 @@ var fm = template.FuncMap{
 }
 
 func init() {
-	tpl = template.Must(template.New("").Funcs(fm).ParseFiles("index.html"))
+	tpl = template.Must(template.New("").Funcs(fm).ParseFiles("index.gohtml"))
 }
 
 func double(x int) int {
@@ -33,7 +33,7 @@ func sqRoot(x float64) float64 {
 
 func main() {
 
-	err := tpl.ExecuteTemplate(os.Stdout, "index.html", 3)
+	err := tpl.ExecuteTemplate(os.Stdout, "index.gohtml", 3)
 	if err != nil {
 		log.Fatalln(err)
 	}

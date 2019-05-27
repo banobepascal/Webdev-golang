@@ -1,9 +1,9 @@
 package main
 
 import (
-	"html/template"
 	"log"
 	"os"
+	"text/template"
 	"time"
 )
 
@@ -14,7 +14,7 @@ var fm = template.FuncMap{
 }
 
 func init() {
-	tpl = template.Must(template.New("").Funcs(fm).ParseFiles("index.html"))
+	tpl = template.Must(template.New("").Funcs(fm).ParseFiles("index.gohtml"))
 }
 
 func monthOfYear(t time.Time) string {
