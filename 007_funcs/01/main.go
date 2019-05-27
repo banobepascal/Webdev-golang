@@ -20,7 +20,7 @@ var fm = template.FuncMap{
 }
 
 func init() {
-	tpl = template.Must(template.New("").Funcs(fm).ParseFiles("index.html"))
+	tpl = template.Must(template.New("").Funcs(fm).ParseFiles("index.gohtml"))
 }
 
 func firstThree(s string) string {
@@ -48,7 +48,7 @@ func main() {
 
 	sage := []person{P1, Q1, R1}
 
-	err := tpl.ExecuteTemplate(os.Stdout, "index.html", sage)
+	err := tpl.ExecuteTemplate(os.Stdout, "index.gohtml", sage)
 	if err != nil {
 		log.Fatalln(err)
 	}
