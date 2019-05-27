@@ -1,9 +1,9 @@
 package main
 
 import (
-	"html/template"
 	"log"
 	"os"
+	"text/template"
 )
 
 type person struct {
@@ -30,7 +30,7 @@ func (p person) TakesArg(x int) int {
 var tpl *template.Template
 
 func init() {
-	tpl = template.Must(template.ParseFiles("index.html"))
+	tpl = template.Must(template.ParseFiles("index.gohtml"))
 }
 
 func main() {
