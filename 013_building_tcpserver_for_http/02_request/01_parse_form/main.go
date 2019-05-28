@@ -15,7 +15,7 @@ func (m rolex) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		log.Fatalln(err)
 	}
 
-	tpl.ExecuteTemplate(w, "index.html", req.Form)
+	tpl.ExecuteTemplate(w, "index.gohtml", req.Form)
 
 }
 
@@ -23,7 +23,7 @@ var tpl *template.Template
 
 func init() {
 
-	tpl = template.Must(template.ParseFiles("index.html"))
+	tpl = template.Must(template.ParseFiles("index.gohtml"))
 }
 
 func main() {
