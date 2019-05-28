@@ -17,13 +17,19 @@ func (m rolex) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 
 	data := struct {
-		Method      string
-		URL         *url.URL
-		Submissions url.Values
+		Method        string
+		URL           *url.URL
+		Submissions   url.Values
+		ContentLength int64
+		Host          string
+		Header        http.Header
 	}{
 		req.Method,
 		req.URL,
 		req.Form,
+		req.ContentLength,
+		req.Host,
+		req.Header,
 	}
 
 	tpl.ExecuteTemplate(w, "index.gohtml", data)
