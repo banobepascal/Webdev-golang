@@ -23,6 +23,7 @@ func main() {
 
 func foo(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("Your request method at foo : ", req.Method, "\n\n")
+	tpl.ExecuteTemplate(w, "bar.html", nil)
 }
 
 func bar(w http.ResponseWriter, req *http.Request) {
