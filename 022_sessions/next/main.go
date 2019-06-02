@@ -22,6 +22,10 @@ var dbSessions = map[string]string{}
 
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
+	bs, _ := bcrypt.GenerateFromPassword([]byte("pass"), bcrypt.MinCost)
+	dbUsers["test@test.com"] = user{"test@test.com", "Petr", "Cech", bs}
+	dbUsers["ham@test.com"] = user{"ham@test.com", "ham", "sane", bs}
+	dbUsers["liz@test.com"] = user{"liz@test.com", "liz", "rogers", bs}
 }
 
 func main() {
@@ -29,6 +33,8 @@ func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/bar", bar)
 	http.HandleFunc("/signup", signup)
+	http.HandleFunc("/login", login)
+	http.Handle("/favicon.ico", http.NotFoundHandler())
 	http.ListenAndServe(":8080", nil)
 
 }
@@ -96,4 +102,45 @@ func signup(w http.ResponseWriter, req *http.Request) {
 	}
 	tpl.ExecuteTemplate(w, "signup.html", nil)
 
+}
+
+func login(w http.ResponseWriter, req *http.Request) {
+	if alreadyLoggedIn(req) {
+		http.Redirect(w, req, "/", http.StatusSeeOther)
+		return
+	}
+
+	//process of form submission
+	if req.Method == http.MethodPost {
+
+		// get form values
+		un := req.FormValue("username")
+		p := req.FormValue("password")
+
+		// is there a username
+		u, ok := dbUsers[un]
+		if !ok {
+			http.Error(w, "username and/or password r fake", http.StatusForbidden)
+			return
+		}
+
+		// does password match the stored password
+		err := bcrypt.CompareHashAndPassword(u.Password, []byte(p))
+		if err != nil {
+			http.Error(w, "username and/or password dont match", http.StatusForbidden)
+			return
+		}
+
+		//create session
+		sID, _ := uuid.NewV4()
+		c := &http.Cookie{
+			Name:  "session",
+			Value: sID.String(),
+		}
+		http.SetCookie(w, c)
+		dbSessions[c.Value] = un
+		http.Redirect(w, req, "/", http.StatusSeeOther)
+		return
+	}
+	tpl.ExecuteTemplate(w, "login.html", nil)
 }
