@@ -4,30 +4,33 @@ import (
 	"html/template"
 	"net/http"
 
+	"golang.org/x/crypto/bcrypt"
+
 	uuid "github.com/satori/go.uuid"
 )
 
 type user struct {
-	Username string
+	UserName string
 	First    string
 	Last     string
-	Password string
+	Password []byte
 }
 
 var tpl *template.Template
-var dbUsers = map[string]user{}      // user ID, user
-var dbSessions = map[string]string{} // session ID, user ID
+var dbUsers = map[string]user{}
+var dbSessions = map[string]string{}
 
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
 }
 
 func main() {
-	http.HandleFunc("/", index) 
+
+	http.HandleFunc("/", index)
 	http.HandleFunc("/bar", bar)
 	http.HandleFunc("/signup", signup)
-	http.Handle("/favicon.ico", http.NotFoundHandler())
 	http.ListenAndServe(":8080", nil)
+
 }
 
 func index(w http.ResponseWriter, req *http.Request) {
@@ -52,19 +55,19 @@ func signup(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	//process form submission
-
+	// process form submission
 	if req.Method == http.MethodPost {
 
+		//get formvalues
 		// get form values
 		un := req.FormValue("username")
 		f := req.FormValue("firstname")
 		l := req.FormValue("lastname")
 		p := req.FormValue("password")
 
-		// username token?
+		//username token
 		if _, ok := dbUsers[un]; ok {
-			http.Error(w, "Username already taken ", http.StatusForbidden)
+			http.Error(w, "Username already taken", http.StatusForbidden)
 			return
 		}
 
@@ -78,12 +81,18 @@ func signup(w http.ResponseWriter, req *http.Request) {
 		dbSessions[c.Value] = un
 
 		// store user in dbUsers
-		u := user{un, f, l, p}
+		bs, err := bcrypt.GenerateFromPassword([]byte(p), bcrypt.MinCost)
+		if err != nil {
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return
+		}
+		u := user{un, f, l, bs}
 		dbUsers[un] = u
 
 		// redirect
-		http.Redirect(w, req, "/bar", http.StatusSeeOther)
+		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return
+
 	}
 	tpl.ExecuteTemplate(w, "signup.html", nil)
 

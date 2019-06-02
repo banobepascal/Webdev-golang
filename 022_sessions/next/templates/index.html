@@ -7,9 +7,11 @@
 <body>
 
 {{if .First}}
-USER NAME {{.UserName}}<br>
+
 FIRST {{.First}}<br>
 LAST {{.Last}}<br>
+USER NAME {{.UserName}}<br>
+PASSWORD {{.Password}}
 {{else}}
 <h2><a href="/signup">sign up</a></h2>
 {{end}}
